@@ -27,6 +27,9 @@ public class AccountController : Controller
             var result = await _authService.RegisterUser(model);
             if (result.Succeeded)
             {
+                // Set TempData to indicate registration was successful
+                TempData["RegistrationSuccess"] = true;
+
                 return RedirectToAction("Index", "Home");
             }
             foreach (var error in result.Errors)
@@ -64,4 +67,7 @@ public class AccountController : Controller
         await _authService.LogoutUser();
         return RedirectToAction("Index", "Home");
     }
+
+
+   
 }

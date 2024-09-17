@@ -16,7 +16,16 @@ namespace ABCMoneyTransfer.Services
 
         public async Task<IdentityResult> RegisterUser(RegisterViewModel model)
         {
-            var user = new User { UserName = model.Email, Email = model.Email, CreatedAt = DateTime.UtcNow };
+            var user = new User { 
+                UserName = model.Email, 
+                Email = model.Email, 
+                FirstName = model.FirstName,
+                MiddleName = string.IsNullOrEmpty(model.MiddleName) ? "" : model.MiddleName,
+                LastName = model.LastName,
+                Address = model.Address,
+                Country = model.Country,
+                CreatedAt = DateTime.UtcNow 
+            };
             return await _userManager.CreateAsync(user, model.Password);
         }
 

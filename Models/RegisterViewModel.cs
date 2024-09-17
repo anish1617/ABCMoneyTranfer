@@ -19,5 +19,21 @@ namespace ABCMoneyTransfer.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Middle Name")]
+        public string? MiddleName { get; set; }
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+        [Required]
+        [Display(Name = "Country")]
+        public string Country { get; set; }
     }
 }

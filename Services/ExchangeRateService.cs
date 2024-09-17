@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json;
+
 namespace ABCMoneyTransfer.Services;
 
 public class ExchangeRateService
@@ -27,6 +29,23 @@ public class ExchangeRateService
         return null;
     }
 
+
+    public async Task<decimal> GetExchangeRateOfCountry(DateTime date, string currency)
+    {
+        var client = _httpClientFactory.CreateClient("ExchangeService");
+
+        var response = await client.GetAsync($"api/forex/v1/rates?page=1&per_page=5&from={date:yyyy-MM-dd}&to={date:yyyy-MM-dd}");
+
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var rateData = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(content, options);
+
+        var rates = rateData?.Data?.Payload.FirstOrDefault();
+        var myrRate = rates?.Rates?.FirstOrDefault(r => r.Currency.Iso3 == currency);
+        return Decimal.Parse(myrRate?.Buy);
+    }
 }
 
 

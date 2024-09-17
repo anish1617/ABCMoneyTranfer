@@ -1,0 +1,124 @@
+﻿@model TransferViewModel
+<h2>Transfer Money</h2>
+<form asp-action="Create" method="post" class="row g-2 card p-4">
+    <div class="col-md-12">
+        <div class="row">
+            <h3>Sender Information</h3>
+            <div class="col-md-4">
+                <label asp-for="SenderFirstName"></label>
+                <input asp-for="SenderFirstName" placeholder="first name" class="form-control" />
+                <span asp-validation-for="SenderFirstName" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="SenderMiddleName"></label>
+                <input asp-for="SenderMiddleName" placeholder="middle name" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="SenderLastName"></label>
+                <input asp-for="SenderLastName" placeholder="last name" class="form-control" />
+                <span asp-validation-for="SenderLastName" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="SenderAddress"></label>
+                <input asp-for="SenderAddress" placeholder="address" class="form-control" />
+                <span asp-validation-for="SenderAddress" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="SenderCountry"></label>
+                <input asp-for="SenderCountry" placeholder="country" class="form-control" />
+                <span asp-validation-for="SenderCountry" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div class="col-md-12">
+        <div class="row">
+            <h3>Receiver Information</h3>
+            <div class="col-md-4">
+                <label asp-for="ReceiverFirstName"></label>
+                <input asp-for="ReceiverFirstName" placeholder="first name" class="form-control" />
+                <span asp-validation-for="ReceiverFirstName" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="ReceiverMiddleName"></label>
+                <input asp-for="ReceiverMiddleName" placeholder="middle name" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="ReceiverLastName"></label>
+                <input asp-for="ReceiverLastName" placeholder="last name" class="form-control" />
+                <span asp-validation-for="ReceiverLastName" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="ReceiverAddress"></label>
+                <input asp-for="ReceiverAddress" placeholder="address" class="form-control" />
+                <span asp-validation-for="ReceiverAddress" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="ReceiverCountry"></label>
+                <input asp-for="ReceiverCountry" placeholder="country" class="form-control" />
+                <span asp-validation-for="ReceiverCountry" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div class="col-md-12">
+        <div class="row">
+            <h3>Payment Details</h3>
+            <div class="col-md-12">
+                <label asp-for="BankName"></label>
+                <input asp-for="BankName" placeholder="bank name" class="form-control" />
+                <span asp-validation-for="BankName" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="AccountNumber"></label>
+                <input asp-for="AccountNumber" placeholder="account number" class="form-control" />
+                <span asp-validation-for="AccountNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="TransferAmount"></label>
+                <input asp-for="TransferAmount" id="transferAmount" placeholder="Amount" class="form-control" />
+                <span asp-validation-for="TransferAmount" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="ExchangeRate"></label>
+                <input asp-for="ExchangeRate" id="exchangeRate" readonly class="form-control"/>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="PayoutAmount"></label>
+                <input asp-for="PayoutAmount" id="payoutAmount" readonly class="form-control"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 my-2">
+        <button class="btn btn-success" type="submit">Transfer</button>
+    </div>
+
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function updateExchangeRate() {
+                $.get('@Url.Action("GetExchangeRate", "Transfer")', function (data) {
+                    $('#exchangeRate').val(data.exchangeRate.toFixed(4));
+                    updatePayoutAmount();
+                });
+            }
+
+            function updatePayoutAmount() {
+                var transferAmount = parseFloat($('#transferAmount').val()) || 0;
+                var exchangeRate = parseFloat($('#exchangeRate').val()) || 0;
+                var payoutAmount = transferAmount * exchangeRate;
+                $('#payoutAmount').val(payoutAmount.toFixed(2));
+            }
+
+            updateExchangeRate();
+            setInterval(updateExchangeRate, 60000); // Update every minute
+
+            $('#transferAmount').on('input', updatePayoutAmount);
+        });
+    </script>
+}

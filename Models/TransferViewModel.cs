@@ -10,7 +10,7 @@ namespace ABCMoneyTransfer.Models
         public string SenderFirstName { get; set; }
 
         [Display(Name = "Middle Name")]
-        public string SenderMiddleName { get; set; }
+        public string? SenderMiddleName { get; set; }
 
         [Required]
         [Display(Name = "Last Name")]
@@ -30,7 +30,7 @@ namespace ABCMoneyTransfer.Models
         public string ReceiverFirstName { get; set; }
 
         [Display(Name = "Middle Name")]
-        public string ReceiverMiddleName { get; set; }
+        public string? ReceiverMiddleName { get; set; }
 
         [Required]
         [Display(Name = "Last Name")]

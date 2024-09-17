@@ -21,6 +21,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Transfer" asp-action="Index">Transfer</a>
+                                </li>
+                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Report" asp-action="Index">Reports</a>
+                                </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -28,6 +37,12 @@
         </nav>
     </header>
     <div class="container">
+        <!-- Display Registration Success Message -->
+        @if (TempData["RegistrationSuccess"] != null)
+        {
+            @Html.Partial("_RegistrationSuccessMessage")
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -39,5 +54,13 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $(".alert-success").fadeOut("slow");
+        }, 5000); // Adjust the timeout as needed (5000 = 5 seconds)
+    });
+</script>
 </body>
 </html>
