@@ -1,4 +1,4 @@
-namespace ABCMoneyTranfer.Models
+namespace ABCMoneyTransfer.Models
 {
     public class ErrorViewModel
     {

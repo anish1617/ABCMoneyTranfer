@@ -1,16 +1,17 @@
 using System.Diagnostics;
-using ABCMoneyTranfer.Models;
+using ABCMoneyTransfer.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ABCMoneyTranfer.Controllers
+namespace ABCMoneyTransfer.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IHttpClientFactory _clientFactory;
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
+            _clientFactory = httpClientFactory;
         }
 
         public IActionResult Index()
@@ -18,15 +19,10 @@ namespace ABCMoneyTranfer.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+       public async Task<IActionResult> GetExchangeRates()
         {
+            
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

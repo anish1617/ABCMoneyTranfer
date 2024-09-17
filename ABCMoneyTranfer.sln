@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35209.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABCMoneyTranfer", "ABCMoneyTranfer.csproj", "{2845CE39-A23B-4E2E-9879-45F8D4FC01B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABCMoneyTransfer", "ABCMoneyTransfer.csproj", "{2845CE39-A23B-4E2E-9879-45F8D4FC01B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
