@@ -32,10 +32,10 @@ namespace ABCMoneyTransfer.Controllers
                 ViewBag.ExchangeRates = payload.Rates;
                 ViewBag.CurrentPage = page;
                 ViewBag.TotalPages = 1; // Since your response contains 1 page, you can extend this logic when needed
-                return View();
+                return PartialView("_ExchangeRatesListPartial");
             }
 
-            return View("Error");
+            return PartialView("Error");
         }
     }
 }

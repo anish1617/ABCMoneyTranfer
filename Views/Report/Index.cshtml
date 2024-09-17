@@ -1,0 +1,69 @@
+﻿@* <h2>Generate Report</h2>
+<form asp-action="GenerateReport" method="post">
+    <div>
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" required />
+    </div>
+    <div>
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate" required />
+    </div>
+    <button type="submit">Generate Report</button>
+</form> *@
+@{
+    ViewData["Title"] = "Generate Report";
+}
+
+<h2>Generate Report</h2>
+
+<form id="reportForm" method="post" class="row g-3 align-items-end">
+    <div class="col-md-4 form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required />
+    </div>
+    <div class="col-md-4 form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required />
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">Generate Report</button>
+    </div>
+    
+</form>
+
+<!-- Placeholder for the dynamic report -->
+<div id="reportContainer" style="margin-top: 20px; overflow-x: auto;">
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#reportForm').submit(function (e) {
+                debugger;
+                e.preventDefault(); 
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GenerateReport", "Report")',
+                    data: $(this).serialize(), 
+                    success: function (result) {
+                        // Load the partial view into the report container div
+                        $('#reportContainer').html(result);
+                        $('#transactionReport').DataTable({
+                            "paging": true,
+                            "searching": true,
+                            "ordering": true,
+                            "info": true,
+                            "responsive": true
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+}

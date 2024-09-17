@@ -4,7 +4,7 @@
 <h1>Welcome to ABC Money Transfer</h1>
 
 
-<form asp-action="GetExchangeRates" method="post" class="row g-3 align-items-end">
+<form id="exchangeRateForm" method="post" class="row g-3 align-items-end">
     <div class="col-md-4">
         <label>From Date:</label>
         <input class="form-control" type="date" name="fromDate" value="@ViewBag.FromDate" />
@@ -17,3 +17,43 @@
         <button class="btn btn-primary" type="submit">Get Exchange Rates</button>
     </div>
 </form>
+
+
+
+<!-- Placeholder for the dynamic report -->
+<div id="exchangeRateReportContainer" style="margin-top: 20px; overflow-x: auto;">
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#exchangeRateForm').submit(function (e) {
+                debugger;
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetExchangeRates", "Home")',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        // Load the partial view into the report container div
+                        $('#exchangeRateReportContainer').html(result);
+                        $('#exchangeRatesTable').DataTable({
+                            "paging": true,
+                            "searching": true,
+                            "ordering": true,
+                            "info": true,
+                            "responsive": true
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+}
+

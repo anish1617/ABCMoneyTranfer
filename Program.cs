@@ -3,8 +3,6 @@ using ABCMoneyTransfer.Models;
 using ABCMoneyTransfer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
-using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +15,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
