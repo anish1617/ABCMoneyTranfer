@@ -27,6 +27,12 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    options.SlidingExpiration = true; // refresh cookie on activity
+});
+
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ExchangeRateService>();
 

@@ -3,6 +3,8 @@ using ABCMoneyTransfer.Models;
 using ABCMoneyTransfer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace ABCMoneyTransfer.Controllers
 {
@@ -21,11 +23,19 @@ namespace ABCMoneyTransfer.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var transferViewModel = new TransferViewModel
+            {
+                SenderFirstName = User.FindFirst("FirstName")?.Value,
+                SenderMiddleName = User.FindFirst("MiddleName")?.Value,
+                SenderLastName = User.FindFirst("LastName")?.Value,
+                SenderAddress = User.FindFirst("Address")?.Value,
+                SenderCountry = User.FindFirst("Country")?.Value,
+            };
+            return View(transferViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TransferViewModel model)
+        public async Task<IActionResult> TransferMoney(TransferViewModel model)
         {
             if (ModelState.IsValid) 
             {
@@ -65,6 +75,14 @@ namespace ABCMoneyTransfer.Controllers
 
                 _context.Transactions.Add(transaction);
                 await _context.SaveChangesAsync();
+
+
+                TempData["TransferDetails"] = JsonConvert.SerializeObject(new TransferSuccessViewModel
+                {
+                    TransferAmount = model.TransferAmount,
+                    ReceiverName = model.ReceiverFirstName,
+                    PayoutAmount = model.PayoutAmount
+                });
 
                 return RedirectToAction("Index", "Home");
             }

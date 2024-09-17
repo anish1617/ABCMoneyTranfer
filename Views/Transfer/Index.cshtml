@@ -1,31 +1,31 @@
 ﻿@model TransferViewModel
 <h2>Transfer Money</h2>
-<form asp-action="Create" method="post" class="row g-2 card p-4">
+<form asp-action="TransferMoney" method="post" class="row g-2 card p-4">
     <div class="col-md-12">
         <div class="row g-3">
             <h3>Sender Information</h3>
             <div class="col-md-4">
                 <label asp-for="SenderFirstName"></label>
-                <input asp-for="SenderFirstName" placeholder="first name" class="form-control" />
+                <input asp-for="SenderFirstName" placeholder="first name" class="form-control" value="@Model.SenderFirstName" readonly/>
                 <span asp-validation-for="SenderFirstName" class="text-danger"></span>
             </div>
             <div class="col-md-4">
                 <label asp-for="SenderMiddleName"></label>
-                <input asp-for="SenderMiddleName" placeholder="middle name" class="form-control" />
+                <input asp-for="SenderMiddleName" placeholder="middle name" class="form-control" value="@Model.SenderMiddleName" readonly/>
             </div>
             <div class="col-md-4">
                 <label asp-for="SenderLastName"></label>
-                <input asp-for="SenderLastName" placeholder="last name" class="form-control" />
+                <input asp-for="SenderLastName" placeholder="last name" class="form-control" value="@Model.SenderLastName" readonly/>
                 <span asp-validation-for="SenderLastName" class="text-danger"></span>
             </div>
             <div class="col-md-12">
                 <label asp-for="SenderAddress"></label>
-                <input asp-for="SenderAddress" placeholder="address" class="form-control" />
+                <input asp-for="SenderAddress" placeholder="address" class="form-control" value="@Model.SenderAddress" />
                 <span asp-validation-for="SenderAddress" class="text-danger"></span>
             </div>
             <div class="col-md-12">
                 <label asp-for="SenderCountry"></label>
-                <input asp-for="SenderCountry" placeholder="country" class="form-control" />
+                <input asp-for="SenderCountry" placeholder="country" class="form-control" value="@Model.SenderCountry" readonly/>
                 <span asp-validation-for="SenderCountry" class="text-danger"></span>
             </div>
         </div>

@@ -1,0 +1,5 @@
+﻿@model TransferSuccessViewModel
+<div class="alert alert-success">
+    <strong>Success!</strong> You have transfered @Model.TransferAmount MYR (@Model.PayoutAmount NPR) to @Model.ReceiverName successfully.
+    <a href="@Url.Action("Index", "Report")">Click here to view report history</a>.
+</div>

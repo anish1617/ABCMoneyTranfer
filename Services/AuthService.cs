@@ -1,5 +1,6 @@
 ﻿using ABCMoneyTransfer.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ABCMoneyTransfer.Services
 {
@@ -31,7 +32,33 @@ namespace ABCMoneyTransfer.Services
 
         public async Task<SignInResult> LoginUser(LoginViewModel model)
         {
-            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user is not null)
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, user.Id),
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim("FirstName", user.FirstName),
+                        new Claim("LastName", user.LastName),
+                        new Claim("MiddleName", string.IsNullOrEmpty(user.MiddleName)? "": user.MiddleName),
+                        new Claim("Address", user.Address),
+                        new Claim("Country", user.Country)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+                    await _signInManager.SignInWithClaimsAsync(user, isPersistent: model.RememberMe, claims);
+
+                    return SignInResult.Success;
+                }
+
+            }
+            return SignInResult.Failed;
         }
 
         public async Task LogoutUser()
