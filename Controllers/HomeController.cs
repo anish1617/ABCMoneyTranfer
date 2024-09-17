@@ -1,17 +1,18 @@
 using System.Diagnostics;
 using ABCMoneyTransfer.Models;
+using ABCMoneyTransfer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ABCMoneyTransfer.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IHttpClientFactory _clientFactory;
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
+        
+        private readonly ExchangeRateService _exchangeRateService;
+
+        public HomeController(ExchangeRateService exchangeRateService)
         {
-            _logger = logger;
-            _clientFactory = httpClientFactory;
+            _exchangeRateService = exchangeRateService;
         }
 
         public IActionResult Index()
@@ -19,10 +20,22 @@ namespace ABCMoneyTransfer.Controllers
             return View();
         }
 
-       public async Task<IActionResult> GetExchangeRates()
+        [HttpPost]
+        public async Task<IActionResult> GetExchangeRates(string fromDate, string toDate, int page = 1)
         {
-            
-            return View();
+            var payload = await _exchangeRateService.GetExchangeRatesAsync(fromDate, toDate, page);
+
+            if (payload != null)
+            {
+                ViewBag.FromDate = fromDate;
+                ViewBag.ToDate = toDate;
+                ViewBag.ExchangeRates = payload.Rates;
+                ViewBag.CurrentPage = page;
+                ViewBag.TotalPages = 1; // Since your response contains 1 page, you can extend this logic when needed
+                return View();
+            }
+
+            return View("Error");
         }
     }
 }

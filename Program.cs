@@ -3,6 +3,7 @@ using ABCMoneyTransfer.Models;
 using ABCMoneyTransfer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,12 +29,13 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ExchangeRateService>();
 
-builder.Services.AddHttpClient(name: "ExchangeService", configureClient: options =>
+// Register HttpClient with the name "ExchangeService"
+builder.Services.AddHttpClient("ExchangeService", client =>
 {
-    options.BaseAddress = new Uri("https://www.nrb.org.np/");
-    options.DefaultRequestHeaders.Accept.Add(
-     new MediaTypeWithQualityHeaderValue(mediaType: "application/json", quality: 1.0));
+    client.BaseAddress = new Uri("https://www.nrb.org.np/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
 var app = builder.Build();
