@@ -2,3 +2,18 @@
     ViewData["Title"] = "Home Page";
 }
 <h1>Welcome to ABC Money Transfer</h1>
+
+
+<form asp-action="GetExchangeRates" method="post" class="row g-3 align-items-end">
+    <div class="col-md-4">
+        <label>From Date:</label>
+        <input class="form-control" type="date" name="fromDate" value="@ViewBag.FromDate" />
+    </div>
+    <div class="col-md-4">
+        <label>To Date:</label>
+        <input class="form-control" type="date" name="toDate" value="@ViewBag.ToDate" />
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" type="submit">Get Exchange Rates</button>
+    </div>
+</form>
