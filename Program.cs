@@ -29,18 +29,25 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    options.ExpireTimeSpan = TimeSpan.FromHours(2);
     options.SlidingExpiration = true; // refresh cookie on activity
 });
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ExchangeRateService>();
+builder.Services.AddScoped<BankService>();
 
 // Register HttpClient with the name "ExchangeService"
 builder.Services.AddHttpClient("ExchangeService", client =>
 {
     client.BaseAddress = new Uri("https://www.nrb.org.np/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+builder.Services.AddHttpClient("WiseApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.sandbox.transferwise.tech");
+    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {builder.Configuration["WiseApi:API_TOKEN"]}");
 });
 
 var app = builder.Build();

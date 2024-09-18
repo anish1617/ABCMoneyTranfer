@@ -1,39 +1,50 @@
 ﻿@model TransferViewModel
-<h2>Create Transfer</h2>
-<form asp-action="Create" method="post" class="row g-2 card">
+
+@* @{
+   var banks = ViewBag.Banks as List<Bank>;
+} *@
+
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+
+<h2 class="my-4">Transfer Money</h2>
+<form asp-action="TransferMoney" method="post" class="row g-2 card p-4" >
     <div class="col-md-12">
-        <div class="row">
+        <div class="row g-3">
             <h3>Sender Information</h3>
             <div class="col-md-4">
                 <label asp-for="SenderFirstName"></label>
-                <input asp-for="SenderFirstName" placeholder="first name" class="form-control" />
+                <input asp-for="SenderFirstName" placeholder="first name" class="form-control" value="@Model.SenderFirstName" />
                 <span asp-validation-for="SenderFirstName" class="text-danger"></span>
             </div>
             <div class="col-md-4">
                 <label asp-for="SenderMiddleName"></label>
-                <input asp-for="SenderMiddleName" placeholder="middle name" class="form-control" />
+                <input asp-for="SenderMiddleName" placeholder="middle name" class="form-control" value="@Model.SenderMiddleName" />
             </div>
             <div class="col-md-4">
                 <label asp-for="SenderLastName"></label>
-                <input asp-for="SenderLastName" placeholder="last name" class="form-control" />
+                <input asp-for="SenderLastName" placeholder="last name" class="form-control" value="@Model.SenderLastName" />
                 <span asp-validation-for="SenderLastName" class="text-danger"></span>
             </div>
             <div class="col-md-12">
                 <label asp-for="SenderAddress"></label>
-                <input asp-for="SenderAddress" placeholder="address" class="form-control" />
+                <input asp-for="SenderAddress" placeholder="address" class="form-control" value="@Model.SenderAddress" />
                 <span asp-validation-for="SenderAddress" class="text-danger"></span>
             </div>
             <div class="col-md-12">
                 <label asp-for="SenderCountry"></label>
-                <input asp-for="SenderCountry" placeholder="country" class="form-control" />
+                <input asp-for="SenderCountry" placeholder="country" class="form-control" value="@Model.SenderCountry" />
                 <span asp-validation-for="SenderCountry" class="text-danger"></span>
             </div>
         </div>
     </div>
 
-    <hr />
+    <hr class="my-4" />
     <div class="col-md-12">
-        <div class="row">
+        <div class="row g-3">
             <h3>Receiver Information</h3>
             <div class="col-md-4">
                 <label asp-for="ReceiverFirstName"></label>
@@ -62,15 +73,34 @@
         </div>
     </div>
 
-    <hr />
+    <hr class="my-4" />
     <div class="col-md-12">
-        <div class="row">
+        <div class="row g-3">
             <h3>Payment Details</h3>
-            <div class="col-md-12">
-                <label asp-for="BankName"></label>
-                <input asp-for="BankName" placeholder="bank name" class="form-control" />
-                <span asp-validation-for="BankName" class="text-danger"></span>
-            </div>
+            @if (ViewBag.BanksList is List<Bank> banks && banks.Count > 0)
+            {
+                <div class="col-md-12">
+                    <label asp-for="BankName"></label>
+                    <select asp-for="BankName" id="banksDropdown" name="BankName" class="form-select">
+                        <option value="">Select a Bank</option>
+                        @foreach (var bank in banks)
+                        {
+                            <option value="@bank.Code">@bank.Title</option>
+                        }
+                    </select>
+                    <span asp-validation-for="BankName" class="text-danger"></span>
+                </div>
+               
+            }
+            else
+            {
+                <div class="col-md-12">
+                    <label asp-for="BankName"></label>
+                    <input asp-for="BankName" placeholder="Please select Recipient bank name" class="form-control" />
+                    <span asp-validation-for="BankName" class="text-danger"></span>
+                </div>
+            }
+
             <div class="col-md-12">
                 <label asp-for="AccountNumber"></label>
                 <input asp-for="AccountNumber" placeholder="account number" class="form-control" />
@@ -83,11 +113,11 @@
             </div>
             <div class="col-md-12">
                 <label asp-for="ExchangeRate"></label>
-                <input asp-for="ExchangeRate" id="exchangeRate" readonly />
+                <input asp-for="ExchangeRate" id="exchangeRate" readonly class="form-control" />
             </div>
             <div class="col-md-12">
                 <label asp-for="PayoutAmount"></label>
-                <input asp-for="PayoutAmount" id="payoutAmount" readonly />
+                <input asp-for="PayoutAmount" id="payoutAmount" readonly class="form-control" />
             </div>
         </div>
     </div>
@@ -101,6 +131,11 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            $('#banksDropdown').select2({
+                placeholder: "Please select recipient's bank name",
+                allowClear: true,
+                width: "100%"
+            });
             function updateExchangeRate() {
                 $.get('@Url.Action("GetExchangeRate", "Transfer")', function (data) {
                     $('#exchangeRate').val(data.exchangeRate.toFixed(4));
