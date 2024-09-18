@@ -13,15 +13,15 @@ namespace ABCMoneyTransfer.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ExchangeRateService _exchangeRateService;
-
-        public TransferController(ApplicationDbContext context, ExchangeRateService exchangeRateService)
+        private readonly BankService _bankService;
+        public TransferController(ApplicationDbContext context, ExchangeRateService exchangeRateService, BankService bankService)
         {
             _context = context;
             _exchangeRateService = exchangeRateService;
-
+            _bankService = bankService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var transferViewModel = new TransferViewModel
             {
@@ -31,6 +31,10 @@ namespace ABCMoneyTransfer.Controllers
                 SenderAddress = User.FindFirst("Address")?.Value,
                 SenderCountry = User.FindFirst("Country")?.Value,
             };
+
+            var banks = await _bankService.GetBanksOfNepal();
+            ViewBag.Banks = banks ?? new List<Bank>();
+
             return View(transferViewModel);
         }
 
@@ -86,6 +90,8 @@ namespace ABCMoneyTransfer.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            var banks = await _bankService.GetBanksOfNepal();
+            ViewBag.BanksList = banks ?? new List<Bank>();
             return View(model);
         }
 
